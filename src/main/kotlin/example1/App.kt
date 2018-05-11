@@ -1,5 +1,8 @@
 package example1
 
+import io.reactivex.Observable
+
+
 fun main(args: Array<String>) {
 
     val fakeDb = FakeDb()
@@ -13,11 +16,19 @@ fun main(args: Array<String>) {
             // alternativa 2
             .subscribe({ println(it) }) // como tenemos solo una lambda podemos usar it
 
-    println("----> mostramos los nombres de los usuarios con los puntos")
+    println("----> mostramos los los puntos")
 
     val usersObservable = fakeDb.getUsers()
-    val usersWithPointsObservable = usersObservable.flatMap { user -> fakeDb.getPointOfUsers(user.key) }
-    usersWithPointsObservable.subscribe( { println(it)} )
+    val pointsObservable = usersObservable.flatMap { user -> fakeDb.getPointOfUsers(user.key) }
+    pointsObservable.subscribe({ println(it) })
 
+    println("----> mostramos los nombres de los usuarios y los puntos")
+
+    val letters = Observable.just("A", "B", "C", "D", "E", "F")
+    val numbers = Observable.just(1, 2, 3, 4, 5)
+
+    Observable.merge(letters, numbers).subscribe({ t -> println(t) })
+
+    // todo ver ZIP & ZIPWITH para unir los dos observable uno a uno.. en cambio el merge te pone uno y despues el otro
 
 }
