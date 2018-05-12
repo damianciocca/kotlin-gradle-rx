@@ -6,6 +6,20 @@ fun main(args: Array<String>) {
 
     val fakeDb = FakeDb()
 
+    /**
+     * FLOWABLE
+     *  if api return more than one item or error
+     *
+     * SINGLE
+     *  if api return only one item or error
+     *
+     * MAYBE
+     *  if api return only one item, no item or error
+     *
+     * COMPLETABLE
+     *  if api would not return any item. Ex Save user in DB will return some value
+     */
+
     println("----> mostramos todos los nombres de los usuarios con FLOWABLE")
     fakeDb.getlAllUsers().subscribe(Consumer { t -> println(t) })
 
