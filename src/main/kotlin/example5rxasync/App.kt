@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
         * ObserveOn => Escucha en los nuevos items para aplicarle algun operacion de manera sincronica en un hilo aparte
 
      */
-    println("----> SubscribeOn Case 1")
+    println("----> SubscribeOn Case 1 with Schedulers.newThread()")
 
     fakeDb.getlAllUsers()
             .subscribeOn(Schedulers.newThread())
@@ -27,7 +27,13 @@ fun main(args: Array<String>) {
     println("----> SubscribeOn Case 2")
     fakeDb.getlAllUsers()
             .doOnNext({ t -> println("User => " + t + " " + Thread.currentThread().name) })
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(Schedulers.newThread()) // Scheduler NEW THREAD type
+            .blockingSubscribe({ println( "User => " + it + " " + Thread.currentThread().name) })
+
+    println("----> SubscribeOn Case 3 with Schedulers.single()")
+    fakeDb.getlAllUsers()
+            .doOnNext({ t -> println("User => " + t + " " + Thread.currentThread().name) })
+            .subscribeOn(Schedulers.single()) // Scheduler SINGLE type
             .blockingSubscribe({ println( "User => " + it + " " + Thread.currentThread().name) })
 
     /**
