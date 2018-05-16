@@ -21,6 +21,8 @@ fun main(args: Array<String>) {
      *
      *  If you are reading from/parsing a file or database.
      *
+     *  Instead of Observer, Flowable uses Subscriber, which is backpressure compatible. However, if you use lambda expressions, then you will not notice any differences
+     *
      * SINGLE
      *  if api return only one item or error
      *
