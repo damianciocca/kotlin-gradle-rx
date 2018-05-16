@@ -7,7 +7,14 @@ fun main(args: Array<String>) {
 
     val fakeDb = FakeDb()
 
-    println("----> mostramos todos los nombres de los usuarios")
+    /**
+     * Muy buena documentacion:
+     *
+     *  http://reactivex.io/intro.html
+     *  http://reactivex.io/documentation/observable.html
+     */
+
+    println("----> mostramos todos los nombres de los usuarios. EJEMPLO 1")
 
     fakeDb.getUsers()
             .map { user -> user.value }
