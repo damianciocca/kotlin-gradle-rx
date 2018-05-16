@@ -1,6 +1,6 @@
 package example3operators
 
-import example2.FakeDb
+import example2Observables.FakeDb
 
 fun main(args: Array<String>) {
 

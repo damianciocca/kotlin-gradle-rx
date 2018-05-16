@@ -1,6 +1,6 @@
 package example5rxasync
 
-import example2.FakeDb
+import example2Observables.FakeDb
 import io.reactivex.schedulers.Schedulers
 
 fun main(args: Array<String>) {

@@ -1,6 +1,6 @@
 package example6errors
 
-import example2.FakeDb
+import example2Observables.FakeDb
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toFlowable

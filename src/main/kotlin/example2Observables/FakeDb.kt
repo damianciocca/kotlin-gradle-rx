@@ -1,4 +1,4 @@
-package example2
+package example2Observables
 
 import io.reactivex.*
 

@@ -1,7 +1,7 @@
 package example4combineobservables
 
-import example2.FakeDb
-import example2.User
+import example2Observables.FakeDb
+import example2Observables.User
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
