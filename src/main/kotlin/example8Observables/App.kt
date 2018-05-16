@@ -2,6 +2,8 @@ package example8Observables
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 
 fun main(args: Array<String>) {
@@ -113,7 +115,6 @@ fun main(args: Array<String>) {
      */
 
 
-
     println("---- HOT Observables  --------------------------------")
 
     val connectableObservable = listOf("String 1", "String 2", "String 3", "String 4", "String5").toObservable()
@@ -147,6 +148,20 @@ fun main(args: Array<String>) {
 
     // note that Subscription 3 will not emit anything
 
+
+    println("---- Observable Interval with Subjects  --------------------------------")
+
+    // There are many types of Subject available. PublishSubject is one of them.
+    // PublishSubject emits to an observer only those items that are emitted by the Observable sources subsequent
+    // to the time of the subscription
+    val subject = PublishSubject.create<Long>()//2
+    Observable.interval(1, TimeUnit.SECONDS).subscribe(subject)// emits a sequential number every specified interval of time.
+    subject.subscribe({ println("Received $it") })
+    Thread.sleep(4000) //
+
+    // Es lo mismo que el ejemplo de arriba pero sin usar el Subject...
+    //Observable.interval(1, TimeUnit.SECONDS).subscribe{println(it)}// emits a sequential number every specified interval of time.
+    //Thread.sleep(4000) //
 
 }
 
