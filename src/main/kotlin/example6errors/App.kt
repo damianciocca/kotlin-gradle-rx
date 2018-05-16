@@ -1,6 +1,7 @@
 package example6errors
 
 import example2.FakeDb
+import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toFlowable
 
@@ -135,6 +136,31 @@ fun main(args: Array<String>) {
      * Aleberto
      * Damian
      * valu1, value2, value3
+     * completed!
+     */
+
+    println("----> RX map carl with an an empty list (in other words, drop the value carl) and complete")
+
+    listOf("Alberto", "Damian", "Rodri", "Ger").toFlowable()
+            .flatMap {
+                if (it == "Rodri") {
+                    Flowable.empty()
+                } else {
+                    Flowable.just(it)
+                }
+            }
+            .onErrorResumeNext(listOf("value1, value2, value3").toFlowable())
+            .subscribeBy(
+                    onNext = { println(it) },
+                    onError = { println("error!!.. Stop") },
+                    onComplete = { println("completed!") })
+
+    /**
+     * Result
+     *
+     * Alberto
+     * Damian
+     * Ger
      * completed!
      */
 }
