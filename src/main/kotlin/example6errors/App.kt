@@ -4,6 +4,7 @@ import example2.FakeDb
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toFlowable
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
 
@@ -163,5 +164,55 @@ fun main(args: Array<String>) {
      * Ger
      * completed!
      */
+
+    println("----> RX throw exception when items to be emitted has a long delay => The delay is > to timeout")
+
+    listOf("Alberto", "Damian", "Rodri", "Ger").toFlowable()
+            .delay(10, TimeUnit.SECONDS)
+            .flatMap {
+                if (it == "Rodri") {
+                    Flowable.empty()
+                } else {
+                    Flowable.just(it)
+                }
+            }
+            .timeout(1, TimeUnit.SECONDS)
+            .blockingSubscribe(
+                    { t -> println(t) },
+                    { println("error!!.. Stop.. The delay to emits items is to long") },
+                    { println("completed") })
+
+    /**
+     * Result
+     *
+     * error!!.. Stop.. The delay to emits items is to long
+     */
+
+    println("----> RX items to be emitted has a delay and timeout => The delay is < to timeout")
+
+    listOf("Alberto", "Damian", "Rodri", "Ger").toFlowable()
+            .delay(2, TimeUnit.SECONDS)
+            .flatMap {
+                if (it == "Rodri") {
+                    Flowable.empty()
+                } else {
+                    Flowable.just(it)
+                }
+            }
+            .timeout(4, TimeUnit.SECONDS)
+            .blockingSubscribe(
+                    { t -> println(t) },
+                    { println("error!!.. Stop.. The delay to emits items is to long") },
+                    { println("completed") })
+
+    /**
+     * Result
+     *
+     * Alberto
+     * Damian
+     * Ger
+     * completed
+     */
+
 }
 
