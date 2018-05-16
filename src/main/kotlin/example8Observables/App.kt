@@ -1,10 +1,7 @@
 package example8Observables
 
 import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.toObservable
-import java.util.concurrent.TimeUnit
 
 
 fun main(args: Array<String>) {
@@ -57,7 +54,7 @@ fun main(args: Array<String>) {
 
     // we used the Observable.fromIterable method to create Observable from an Iterable instance (here, list).
     Observable.fromIterable(listOf(1, 2, 3, 4, 5))
-            .subscribe{ println(it)}
+            .subscribe { println(it) }
 
 
     println("---- Iteraables + kotlin extension functions--------------------------------")
@@ -69,7 +66,85 @@ fun main(args: Array<String>) {
      *
      * So, it uses the Observable.from method internally, thanks again to the extension functions of Kotlin.
      */
-    listOf(1,2,3).toObservable().subscribe{println(it)}
+    listOf(1, 2, 3).toObservable().subscribe { println(it) }
+
+
+
+    println("---- Cold Observables  --------------------------------")
+
+    /**
+     * Observables, emitting items from the beginning for each subscription, are called Cold Observable.
+     * To be more specific, Cold Observables start running upon subscriptions and Cold Observable starts pushing
+     * items after subscribe gets called, and pushes the same sequence of items on each subscription.
+     */
+
+    val observable: Observable<String> = listOf("String 1", "String 2", "String 3", "String 4").toObservable()
+
+    observable.subscribe({
+        println("Received $it")
+    }, {
+        println("Error ${it.message}")
+    }, {
+        println("Done")
+    })
+
+    observable.subscribe({
+        //3
+        println("Received $it")
+    }, {
+        println("Error ${it.message}")
+    }, {
+        println("Done")
+    })
+
+    /**
+     * Result:
+     *
+    Received String 1
+    Received String 2
+    Received String 3
+    Received String 4
+    Done
+    Received String 1
+    Received String 2
+    Received String 3
+    Received String 4
+    Done
+     */
+
+    println("---- HOT Observables  --------------------------------")
+
+    val connectableObservable = listOf("String 1", "String 2", "String 3", "String 4", "String5").toObservable()
+            .publish()
+    // which is a variety of ObservableSource that waits until its method is called before it begins emitting
+    // items to those that have subscribed to it.
+
+    connectableObservable.subscribe({ println("Subscription 1 $it") })
+    connectableObservable.subscribe({ println("Subscription 2 $it") })
+    connectableObservable.connect() // we called connect method, and emissions got started to both Observers.
+
+    connectableObservable.subscribe({ println("Subscription 3: $it") }) //6 //Will not receive emissions
+
+    // si movemos el connect debajo de la 3er subscription, la 3era va a recibir items tmb
+
+    /**
+     * Result
+     *
+     *
+    Subscription 1: String 1
+    Subscription 2 String 1
+    Subscription 1: String 2
+    Subscription 2 String 2
+    Subscription 1: String 3
+    Subscription 2 String 3
+    Subscription 1: String 4
+    Subscription 2 String 4
+    Subscription 1: String5
+    Subscription 2 String5
+     */
+
+    // note that Subscription 3 will not emit anything
+
 
 }
 
