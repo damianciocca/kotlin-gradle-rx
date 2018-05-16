@@ -1,7 +1,5 @@
-package example7FilesAnManObservables
+package example7FilesAnManyObservables
 
-import io.reactivex.Observable
-import io.reactivex.Single
 import java.io.File
 
 

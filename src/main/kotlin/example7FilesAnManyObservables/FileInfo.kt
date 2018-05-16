@@ -1,4 +1,4 @@
-package example7FilesAnManObservables
+package example7FilesAnManyObservables
 
 import java.io.File
 
