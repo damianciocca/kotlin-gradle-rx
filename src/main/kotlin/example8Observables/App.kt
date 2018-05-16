@@ -112,6 +112,8 @@ fun main(args: Array<String>) {
     Done
      */
 
+
+
     println("---- HOT Observables  --------------------------------")
 
     val connectableObservable = listOf("String 1", "String 2", "String 3", "String 4", "String5").toObservable()
