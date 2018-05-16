@@ -1,0 +1,59 @@
+
+Reactive concepts
+
+}
+
+The thing to notice here is that we're pulling data from the list while the current thread is blocked till the
+data is received and ready. For instance, think of getting that data from a network call/database query instead of just a
+list, and in that case, how long the thread will be blocked. You can obviously create a separate thread for those operations,
+but that too will increase complexity.
+
+Just give it a thought, which one is a better approach, making the program wait for data or pushing data to the program whenever
+it's available?
+
+The building blocks of the ReactiveX framework (be it RxKotlin or RxJava) are the observables. The Observable class is opposite
+to Iterator. It has an underlying collection or computation that produces values that can be consumed by a consumer. But the
+difference is that the consumer doesn't pull these values from the producer like in the Iterator pattern; instead the producer
+pushes the values as notifications to the consumer.The thing to notice here is that we're pulling data from the list while the
+current thread is blocked till the data is received and ready. For instance, think of getting that data from a network call/database
+ query instead of just a list, and in that case, how long the thread will be blocked. You can obviously create a separate thread for
+ those operations, but that too will increase complexity.
+
+Example
+
+fun main(args: Array<String>) {
+    var list:List<Any> = listOf(1, "Two", 3, "Four", "Five", 5.5f) // 1
+    var iterator = list.iterator() // 2
+    while (iterator.hasNext()) { // 3
+        println(iterator.next()) // Prints each element 4
+    }
+
+ Let's go through the program line by line to understand how it works.
+
+
+ At comment 1, we created a list with seven items (the list contains data of mixed data types with the help of Any class).
+ At comment 2, we created iterator from the list, so that we can iterate over the data.
+ In comment 3, we created a while loop to pull data from the list with the help of an iterator, and then
+ at comment 4, we printed it.
+
+
+ So, let's take the same example again, this time with observable:
+
+ fun main(args: Array<String>) {
+     var list = listOf(1, "Two", 3, "Four", "Five", 5.5f) // 1
+     var observable = list.toObservable();
+
+     observable.subscribeBy(  // named arguments for lambda Subscribers
+             onNext = { println(it) },
+             onError =  { it.printStackTrace() },
+             onComplete = { println("Done!") }
+     )
+ }
+
+ Created a list (the same as the previous one)
+ An Observable instance is created by the list
+ We subscribe to the observer (we're using named arguments for lambda; we will cover them in detail later)
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                               Just give it a thought, which one is a better approach, making the program wait for data or pushing data to the program whenever it's available?
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                               The building blocks of the ReactiveX framework (be it RxKotlin or RxJava) are the observables. The Observable class is opposite to Iterator. It has an underlying collection or computation that produces values that can be consumed by a consumer. But the difference is that the consumer doesn't pull these values from the producer like in the Iterator pattern; instead the producer pushes the values as notifications to the consumer.
