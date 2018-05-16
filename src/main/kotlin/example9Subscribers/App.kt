@@ -3,6 +3,7 @@ package example9Subscribers
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.toObservable
 
 fun main(args: Array<String>) {
 
@@ -65,5 +66,22 @@ fun main(args: Array<String>) {
     }
 
     observable.subscribe(observer)
+
+    println("======== >EJEMPLO 3 - MERGEWITH")
+
+    val sasas = Observable.create<String>(
+            {
+                it.onNext("Emitted 1")
+                it.onNext("Emitted 2")
+                it.onNext("Emitted 3")
+                it.onNext("Emitted 4")
+                it.onNext("Emitted 5")
+                it.onNext("Emitted 6")
+            })
+
+    val mergeWith = sasas.mergeWith(listOf("a, v").toObservable())
+
+    mergeWith.subscribe { println(it) }
+
 
 }
