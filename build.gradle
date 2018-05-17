@@ -38,6 +38,9 @@ dependencies {
 	compile('org.apache.logging.log4j:log4j-slf4j-impl:2.10.0')
 	compile('org.apache.logging.log4j:log4j-1.2-api:2.10.0')
 
+	compile 'io.vertx:vertx-core:3.5.1'
+	compile "io.vertx:vertx-web:3.5.1"
+	compile 'com.etermax.platform:server-kotlin-vertx:1.2'
 
 	testCompile 'org.jetbrains.spek:spek-api:1.1.5'
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
