@@ -2,6 +2,7 @@ package vertx.clientservertest
 
 import io.vertx.core.Future
 import io.vertx.reactivex.core.AbstractVerticle
+import io.vertx.reactivex.ext.web.Router
 
 
 /**
@@ -21,9 +22,18 @@ class MyFirstVertxHttpServer : AbstractVerticle() { // IMPORTANTE extender de io
 
         val port = EnvironmentConfig.getInt("port")
 
+        // This object is responsible for dispatching the HTTP requests to the right handler.
+        val router = Router.router(vertx)
+        router.route("/").handler({ routingContext ->
+            val response = routingContext.response()
+            response
+                    .putHeader("content-type", "text/html")
+                    .end("<h1>Hello from my first Vert.x 3 application</h1>")
+        })
+
         vertx.createHttpServer()
-                // requestHandler is called every time the server receives a request
-                .requestHandler { r -> r.response().end("<h1>Hello from my first " + "Vert.x 3 application</h1>") }
+                // requestHandler is called every time the server receives a request and is dispatch by a router
+                .requestHandler { req -> router.accept(req) }
                 .listen(port) { result ->
                     if (result.succeeded()) {
                         startFuture.complete()
