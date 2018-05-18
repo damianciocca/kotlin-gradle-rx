@@ -1,10 +1,12 @@
 package vertx.apirest
 
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.vertx.core.Future
 import io.vertx.core.json.Json
 import io.vertx.reactivex.core.AbstractVerticle
 import io.vertx.reactivex.ext.web.Router
 import io.vertx.reactivex.ext.web.RoutingContext
+import io.vertx.reactivex.ext.web.handler.BodyHandler
 import java.util.*
 
 
@@ -22,9 +24,22 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
 
         createSomeData()
 
+        Json.mapper.registerModule(KotlinModule()) // IMPORTANTE para poder serializar de JSON a Kotlin Obj
+
         val router = Router.router(vertx)
 
+        /**
+         * GET /api/whiskies => get all bottles (getAll)
+         * GET /api/whiskies/:id => get the bottle with the corresponding id (getOne)
+         * POST /api/whiskies => add a new bottle (addOne)
+         * PUT /api/whiskies/:id => update a bottle (updateOne)
+         * DELETE /api/whiskies/id => delete a bottle (deleteOne)
+         */
         router.get("/api/whiskies").handler(this::getAll);
+        // enables the reading of the request body for all routes under “/api/whiskies”. We could have enabled it
+        // globally with router.route().handler(BodyHandler.create()).
+        router.route("/api/whiskies*").handler(BodyHandler.create());
+        router.post("/api/whiskies").handler(this::addOne);
 
         vertx.createHttpServer()
                 .requestHandler { req -> router.accept(req) }
@@ -39,10 +54,10 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
     }
 
     private fun createSomeData() {
-        val bowmore = Whisky("Bowmore 15 Years Laimrig", "Scotland, Islay")
+        val bowmore = Whisky(1, "Bowmore 15 Years Laimrig", "Scotland, Islay")
         products[bowmore.id] = bowmore
 
-        val talisker = Whisky("Talisker 57° North", "Scotland, Island")
+        val talisker = Whisky(2, "Talisker 57° North", "Scotland, Island")
         products[talisker.id] = talisker
     }
 
@@ -53,6 +68,17 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
         routingContext.response()
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encodePrettily(products.values))
+    }
+
+    private fun addOne(routingContext: RoutingContext) {
+        val bodyAsJson = routingContext.bodyAsString
+        println(bodyAsJson)
+        val whisky = Json.decodeValue(bodyAsJson, Whisky::class.java)
+        products[whisky.id] = whisky
+        routingContext.response()
+                .setStatusCode(201)
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(whisky))
     }
 
 }
