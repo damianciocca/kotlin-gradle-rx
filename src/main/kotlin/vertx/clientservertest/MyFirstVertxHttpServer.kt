@@ -3,6 +3,7 @@ package vertx.clientservertest
 import io.vertx.core.Future
 import io.vertx.reactivex.core.AbstractVerticle
 import io.vertx.reactivex.ext.web.Router
+import io.vertx.reactivex.ext.web.handler.StaticHandler
 
 
 /**
@@ -24,12 +25,20 @@ class MyFirstVertxHttpServer : AbstractVerticle() { // IMPORTANTE extender de io
 
         // This object is responsible for dispatching the HTTP requests to the right handler.
         val router = Router.router(vertx)
+
+        // 1. ROUTE /
         router.route("/").handler({ routingContext ->
             val response = routingContext.response()
             response
                     .putHeader("content-type", "text/html")
                     .end("<h1>Hello from my first Vert.x 3 application</h1>")
         })
+
+        // 2. ROUTE assets/*
+        // Serve static resources from the /assets directory
+        // It routes requests on “/assets/*” to resources stored in the “assets”
+        // ex http://localhost:8098/assets/index.html
+        router.route("/assets/*").handler(StaticHandler.create("assets"))
 
         vertx.createHttpServer()
                 // requestHandler is called every time the server receives a request and is dispatch by a router
