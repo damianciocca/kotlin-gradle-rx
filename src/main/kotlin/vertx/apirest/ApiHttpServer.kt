@@ -40,6 +40,9 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
         // globally with router.route().handler(BodyHandler.create()).
         router.route("/api/whiskies*").handler(BodyHandler.create());
         router.post("/api/whiskies").handler(this::addOne);
+        // In the URL, we define a path parameter :id. So, when handling a matching request, Vert.x extracts the path segment corresponding to the
+        // parameter and let us access it in the handler method. For instance, /api/whiskies/0 maps id to 0.
+        router.delete("/api/whiskies/:id").handler(this::deleteOne);
 
         vertx.createHttpServer()
                 .requestHandler { req -> router.accept(req) }
@@ -80,5 +83,17 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encodePrettily(whisky))
     }
+
+    private fun deleteOne(routingContext: RoutingContext) {
+        val id = routingContext.request().getParam("id")
+        if (id == null) {
+            routingContext.response().setStatusCode(400).end()
+        } else {
+            val idAsInteger = Integer.valueOf(id)
+            products.remove(idAsInteger)
+        }
+        routingContext.response().setStatusCode(204).end()
+    }
+
 
 }
