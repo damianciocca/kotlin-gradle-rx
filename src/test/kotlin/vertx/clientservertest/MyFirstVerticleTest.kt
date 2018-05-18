@@ -15,7 +15,7 @@ class MyFirstVerticleTest {
     private var vertx: Vertx? = null
 
     @Before
-    fun setUp(context: TestContext) {
+    fun setUp(context: TestContext) { // @Before method, it receives a TestContext. This object lets us control the asynchronous aspect of our test
         vertx = Vertx.vertx()
         // the not-null assertion operator (!!) converts any value to a non-null type and throws an exception if the value is null
         vertx!!.deployVerticle(MyFirstVertxServer::class.java.name, context.asyncAssertSuccess())
