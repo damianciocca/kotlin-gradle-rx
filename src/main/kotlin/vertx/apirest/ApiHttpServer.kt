@@ -22,9 +22,9 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
 
     override fun start(startFuture: Future<Void>) {
 
-        createSomeData()
-
         Json.mapper.registerModule(KotlinModule()) // IMPORTANTE para poder serializar de JSON a Kotlin Obj
+
+        createSomeData()
 
         val router = Router.router(vertx)
 

@@ -1,7 +1,7 @@
 package vertx.apirest
 
 
-data class Whisky constructor(
+data class Whisky(
         val id: Int,
         val name: String,
         val origin: String)
