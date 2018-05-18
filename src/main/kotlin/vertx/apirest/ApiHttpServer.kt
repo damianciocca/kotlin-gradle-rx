@@ -14,6 +14,9 @@ import java.util.*
  * https://vertx.io/blog/my-first-vert-x-3-application/
  *
  * In the Vert.x world, a verticle is a component. By extending AbstractVerticle, our class gets access to the vertx field.
+ *
+ * EJECUTAR CON ApiRestServerRunner en TEST
+ *
  */
 class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.reactivex.core.AbstractVerticle
 
@@ -25,6 +28,9 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
         Json.mapper.registerModule(KotlinModule()) // IMPORTANTE para poder serializar de JSON a Kotlin Obj
 
         createSomeData()
+
+        val port = config().getInteger("http.port", 8080) // otra forma de obtener la configuracion via DeploymentOptions class
+        println("port $port")
 
         val router = Router.router(vertx)
 
@@ -46,11 +52,13 @@ class ApiHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.re
 
         vertx.createHttpServer()
                 .requestHandler { req -> router.accept(req) }
-                .listen(8098) { result ->
+                .listen(port) { result ->
                     if (result.succeeded()) {
                         startFuture.complete()
+                        println("listen!")
                     } else {
                         startFuture.fail(result.cause())
+                        println("fail")
                     }
                 }
 

@@ -1,6 +1,8 @@
 package vertx.apirest
 
+import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
+import io.vertx.core.json.JsonObject
 import io.vertx.ext.unit.TestContext
 import io.vertx.ext.unit.junit.VertxUnitRunner
 import org.junit.After
@@ -17,8 +19,10 @@ class ApiRestServerRunner {
     @Before
     fun setUp(context: TestContext) { // @Before method, it receives a TestContext. This object lets us control the asynchronous aspect of our test
         vertx = Vertx.vertx()
+        // otra forma de poder pasar parametros de configuracion por json
+        val options = DeploymentOptions().setConfig(JsonObject().put("http.port", 8098))
         // the not-null assertion operator (!!) converts any value to a non-null type and throws an exception if the value is null
-        vertx!!.deployVerticle(ApiHttpServer::class.java.name, context.asyncAssertSuccess())
+        vertx!!.deployVerticle(ApiHttpServer::class.java.name, options, context.asyncAssertSuccess())
     }
 
     @After
