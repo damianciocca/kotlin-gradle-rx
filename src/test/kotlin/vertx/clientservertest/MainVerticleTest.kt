@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(VertxUnitRunner::class)
-class MyFirstVerticleTest {
+class MainVerticleTest {
 
     private var vertx: Vertx? = null
 
@@ -18,7 +18,7 @@ class MyFirstVerticleTest {
     fun setUp(context: TestContext) { // @Before method, it receives a TestContext. This object lets us control the asynchronous aspect of our test
         vertx = Vertx.vertx()
         // the not-null assertion operator (!!) converts any value to a non-null type and throws an exception if the value is null
-        vertx!!.deployVerticle(MyFirstVertxServer::class.java.name, context.asyncAssertSuccess())
+        vertx!!.deployVerticle(MainVerticle::class.java.name, context.asyncAssertSuccess())
     }
 
     @After
@@ -31,8 +31,8 @@ class MyFirstVerticleTest {
 
         val async = context.async()
 
-        // HTTP GET
-        vertx!!.createHttpClient().getNow(8099, "localhost", "/")
+        val port = EnvironmentConfig.getInt("port")
+        vertx!!.createHttpClient().getNow(port, "localhost", "/")
         { response ->
             response.handler { body ->
                 context.assertTrue(body.toString().contains("Hello"))

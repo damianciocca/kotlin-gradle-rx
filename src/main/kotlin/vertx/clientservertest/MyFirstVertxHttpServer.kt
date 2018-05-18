@@ -1,14 +1,15 @@
 package vertx.clientservertest
 
-import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
+import io.vertx.reactivex.core.AbstractVerticle
+
 
 /**
  * https://vertx.io/blog/my-first-vert-x-3-application/
  *
  * In the Vert.x world, a verticle is a component. By extending AbstractVerticle, our class gets access to the vertx field.
  */
-class MyFirstVertxServer : AbstractVerticle() {
+class MyFirstVertxHttpServer : AbstractVerticle() { // IMPORTANTE extender de io.vertx.reactivex.core.AbstractVerticle
 
     /**
      * The start method is called when the verticle is deployed
@@ -18,10 +19,12 @@ class MyFirstVertxServer : AbstractVerticle() {
      */
     override fun start(startFuture: Future<Void>) {
 
+        val port = EnvironmentConfig.getInt("port")
+
         vertx.createHttpServer()
                 // requestHandler is called every time the server receives a request
                 .requestHandler { r -> r.response().end("<h1>Hello from my first " + "Vert.x 3 application</h1>") }
-                .listen(8099) { result ->
+                .listen(port) { result ->
                     if (result.succeeded()) {
                         startFuture.complete()
                     } else {
