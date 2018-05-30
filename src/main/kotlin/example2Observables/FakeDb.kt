@@ -15,6 +15,18 @@ class FakeDb : Db {
         return getlAllUsers().filter { it.id == id }.firstElement()
     }
 
+    fun getUserById2(id: Int): Maybe<User> {
+        return Maybe.create({ emitter ->
+            if(id == 10) {
+                val user = User(10, "name")
+                emitter.onSuccess(user)
+            } else {
+                emitter.onComplete()
+            }
+        })
+    }
+
+
     override fun getPointsForUser(id: Int): Single<Int> {
         return if (userIsNotFound(id))
             Single.error { UserNotFound("id $id not found") }

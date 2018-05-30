@@ -40,7 +40,18 @@ fun main(args: Array<String>) {
     fakeDb.getlAllUsers().subscribe(Consumer { t -> println(t) })
 
     println("----> mostramos un usuario con MAYBE")
-    fakeDb.getUserById(1).subscribe(Consumer { t -> println(t) })
+    fakeDb.getUserById(1)
+            .doOnComplete { println("se completo") }
+            .doOnSuccess { println("on success $it") }
+            .doOnError { println("ERROR") }
+            .subscribe(Consumer { t -> println(t) })
+
+    println("----> mostramos un usuario con MAYBE case 2")
+    fakeDb.getUserById2(10)
+            //.doOnSuccess { println("on success $it") }
+            // .doOnComplete { println("se completo") }
+            // .doOnError{ println("ERROR") }
+            .subscribe({ println("on success $it") }, { println("ERROR") }, { println("se completo") })
 
     println("----> no mostramos nada con MAYBE")
     fakeDb.getUserById(100).subscribe(Consumer { t -> println(t) })
