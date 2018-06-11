@@ -69,5 +69,13 @@ fun main(args: Array<String>) {
      * User result => Damian ThreadName: main
      */
 
+
+    println("----> KOTLIN LET ")
+    val pepe = Pepe("sasa")
+
+    pepe.id?.let {
+        println(pepe.id)
+    }
 }
 
+data class Pepe(val id: String?)
