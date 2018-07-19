@@ -41,5 +41,12 @@ fun main(args: Array<String>) {
      * 10
      * 20
      */
+
+
+    fakeDb.getlAllUsersV2()
+            .flatMapMaybe { user -> fakeDb.getUserById2(user.id) }
+            .doOnComplete { println("Completed!.. no hay mas datos...") }
+            .subscribe({ println(it) })
+
 }
 

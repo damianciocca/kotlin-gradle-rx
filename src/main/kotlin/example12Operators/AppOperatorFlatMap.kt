@@ -61,4 +61,20 @@ fun main(args: Array<String>) {
                 println("Complete")
             }
     )
+
+    println("----------------- EJEMPLO 3 -------------------------")
+    val source = Observable.just("Alpha", "Beta", "Gamma", "Delta", "Epsilon")
+    source
+            .flatMap { s -> Observable.fromArray(s.split("")) }
+            .subscribe(System.out::println);
+
+    println("----------------- EJEMPLO 4 -------------------------")
+    // Our earlier flatMap() examples would be better suited for concatMap() if we explicitly cared about emission order. Although our
+    // example here has the same output as the flatMap() example, we should use concatMap() when we explicitly care about maintaining
+    // ordering and want to process each mapped Observable sequentially
+    val source2 = Observable.just("Alpha", "Beta", "Gamma", "Delta", "Epsilon")
+    source2
+            .concatMap{ s -> Observable.fromArray(s.split("")) }
+            .subscribe(System.out::println);
+
 }
