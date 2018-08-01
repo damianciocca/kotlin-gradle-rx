@@ -11,7 +11,10 @@ fun main(args: Array<String>) {
 
     val seconds = Observable.interval(1, TimeUnit.SECONDS)
             .publish()
-            .refCount()
+            .refCount() // se puede usar en lugar de publish().refCount() el share()
+
+    //val seconds = Observable.interval(1, TimeUnit.SECONDS)
+    //        .share()
 
     seconds.take(5).subscribe { println("observer1 $it") }
 
