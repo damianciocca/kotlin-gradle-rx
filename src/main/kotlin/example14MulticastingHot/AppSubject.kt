@@ -51,6 +51,8 @@ fun main(args: Array<String>) {
     // “Since Subjects are hot, executing the onNext() calls before the Observers are set up would result in
     // these emissions being missed with our Subject. If you move the onNext() calls like this, you will not get any
     // output because the Observer will miss these emissions:”
+
+    // Es hot, por eso los datos previos al suscribe se perdieron...
     val subject3 = PublishSubject.create<String>()
 
     subject3.onNext("Alpha")
